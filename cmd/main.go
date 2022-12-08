@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"time"
 )
 
 func main() {
@@ -33,13 +32,9 @@ func main() {
 	if errDir != nil {
 		panic(errDir)
 	}
-	var views = blocks.New(path.Join(rootDir, "web/view")).
-		Reload(true).
-		Funcs(map[string]interface{}{
-			"year": func() int {
-				return time.Now().Year()
-			},
-		})
+	views := blocks.New(path.Join(rootDir, "web/view")).
+		Extension(".gohtml").
+		Reload(true)
 
 	router.GET("/", func(context *gin.Context) {
 		data := map[string]interface{}{
