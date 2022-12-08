@@ -1,3 +1,13 @@
-{{ template "app" }}
+<!doctype html>
+<html lang="en">
+    <head>
+        {{ partial "partials/_head" . }}
+        {{ block "style" . }}{{end}}
+    </head>
+    <body class="bg-light">
+        {{ template "content" . }}
 
-{{ template "content" . }}
+        {{ partial "partials/_foot" . }}
+        {{ block "js" . }}{{end}}
+    </body>
+</html>

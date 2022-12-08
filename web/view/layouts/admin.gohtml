@@ -1,10 +1,20 @@
-{{ template "app" }}
+<!doctype html>
+<html lang="en">
+  <head>
+    {{ partial "partials/_head" . }}
+    {{ block "style" . }}{{end}}
+  </head>
+  <body class="bg-light">
+    {{ partial "partials/navbar" . }}
+    <main class="col-md-6 mx-sm-auto col-lg-10 px-md-4">
+      {{ template "content" . }}
+    </main>
 
-{{ partial "partials/navbar" . }}
-<main class="col-md-6 mx-sm-auto col-lg-10 px-md-4">
-  {{ template "content" . }}
-</main>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center pt-3 px-3 my-4 border-top">
+      {{ partial "partials/footer" .}}
+    </footer>
 
-<footer class="d-flex flex-wrap justify-content-between align-items-center pt-3 px-3 my-4 border-top">
-  {{ partial "partials/footer" .}}
-</footer>
+    {{ partial "partials/_foot" . }}
+    {{ block "js" . }}{{end}}
+  </body>
+</html>
