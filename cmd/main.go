@@ -7,6 +7,7 @@ import (
 	"github.com/pengdst/golang-file-upload/controller"
 	"github.com/pengdst/golang-file-upload/service"
 	log "github.com/sirupsen/logrus"
+	"html/template"
 	"net/http"
 	"os"
 	"path"
@@ -34,7 +35,18 @@ func main() {
 	}
 	views := blocks.New(path.Join(rootDir, "web/view")).
 		Extension(".gohtml").
-		Reload(true)
+		Reload(true).
+		Funcs(
+			template.FuncMap{
+				"add": func(result int, numbs ...int) int {
+					for _, numb := range numbs {
+						result += numb
+					}
+
+					return result
+				},
+			},
+		)
 
 	router.GET("/", func(context *gin.Context) {
 		data := map[string]interface{}{
