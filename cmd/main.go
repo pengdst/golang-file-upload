@@ -37,10 +37,7 @@ func main() {
 		Reload(true)
 
 	router.GET("/", func(context *gin.Context) {
-		data := map[string]interface{}{
-			"Title": "Page Title",
-		}
-		err := views.ExecuteTemplate(context.Writer, "index", "app", data)
+		err := views.ExecuteTemplate(context.Writer, "index", "admin", nil)
 		if err != nil {
 			panic(err)
 		}
@@ -51,7 +48,7 @@ func main() {
 			"Title":    "Login",
 			"ImageUrl": "http://www.w3.org/2000/svg",
 		}
-		err := views.ExecuteTemplate(context.Writer, "auth/login", "app", data)
+		err := views.ExecuteTemplate(context.Writer, "auth/login", "guest", data)
 		if err != nil {
 			panic(err)
 		}
