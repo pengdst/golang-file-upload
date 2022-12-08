@@ -54,6 +54,17 @@ func main() {
 		}
 	})
 
+	router.GET("/register", func(context *gin.Context) {
+		data := map[string]interface{}{
+			"Title":    "Login",
+			"ImageUrl": "http://www.w3.org/2000/svg",
+		}
+		err := views.ExecuteTemplate(context.Writer, "auth/register", "guest", data)
+		if err != nil {
+			panic(err)
+		}
+	})
+
 	err := router.Run()
 	if err != nil {
 		log.Fatal(err)
