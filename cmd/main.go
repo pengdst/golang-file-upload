@@ -45,7 +45,7 @@ func main() {
 		data := map[string]interface{}{
 			"Title": "Page Title",
 		}
-		err := views.ExecuteTemplate(context.Writer, "index", "main", data)
+		err := views.ExecuteTemplate(context.Writer, "index", "app", data)
 		if err != nil {
 			panic(err)
 		}
@@ -56,7 +56,7 @@ func main() {
 			"Title":    "Login",
 			"ImageUrl": "http://www.w3.org/2000/svg",
 		}
-		err := views.ExecuteTemplate(context.Writer, "auth/login", "main", data)
+		err := views.ExecuteTemplate(context.Writer, "auth/login", "app", data)
 		if err != nil {
 			panic(err)
 		}
