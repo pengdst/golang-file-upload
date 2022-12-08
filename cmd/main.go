@@ -37,7 +37,19 @@ func main() {
 		Reload(true)
 
 	router.GET("/", func(context *gin.Context) {
-		err := views.ExecuteTemplate(context.Writer, "index", "admin", nil)
+		data := map[string]interface{}{
+			"Peoples": []map[string]string{
+				{
+					"Name":      "One Piece",
+					"Position":  "Troublemaker",
+					"Office":    "New World",
+					"Age":       "33",
+					"StartDate": "2008-11-28",
+					"Salary":    "162,700",
+				},
+			},
+		}
+		err := views.ExecuteTemplate(context.Writer, "index", "admin", data)
 		if err != nil {
 			panic(err)
 		}

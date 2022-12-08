@@ -12,14 +12,17 @@
         </tr>
         </thead>
         <tbody>
+        {{ range $People := .Peoples }}
         <tr>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
+            <td>{{$People.Name}}</td>
+            <td>{{$People.Position}}</td>
+            <td>{{$People.Office}}</td>
+            <td>{{$People.Age}}</td>
+            <td>{{$People.StartDate}}</td>
+            <td>${{$People.Salary}}</td>
         </tr>
+        {{end}}
+
         <tr>
             <td>Garrett Winters</td>
             <td>Accountant</td>
