@@ -5,6 +5,10 @@
     <h1 class="h3 mb-3 fw-normal">Sign up new user</h1>
 
     <div class="form-floating text-start">
+      <input type="text" class="form-control" id="name" placeholder="Name">
+      <label for="name">Name</label>
+    </div>
+    <div class="form-floating text-start">
       <input type="email" class="form-control" id="email" placeholder="name@example.com">
       <label for="email">Email address</label>
     </div>
@@ -47,10 +51,15 @@
     z-index: 2;
   }
 
-  .form-signin input[id="email"] {
+  .form-signin input[id="name"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+  }
+
+  .form-signin input[id="email"] {
+    margin-bottom: -1px;
+    border-radius: 0;
   }
 
   .form-signin input[id="password"] {
