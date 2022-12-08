@@ -495,3 +495,23 @@
     } );
 </script>
 {{ end }}
+
+{{ define "style"}}
+    <style>
+        html, body{
+            height: 100%;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        body > section.container {
+            flex: 1 0 auto;
+        }
+        body > footer{
+            flex-shrink:0;
+        }
+    </style>
+{{end}}
