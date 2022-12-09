@@ -1,23 +1,23 @@
 {{ define "content" }}
 <main class="form-signin w-100 m-auto">
-  <form class="text-center">
+  <form class="text-center" method="post">
     <img class="mb-4" src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Sign up new user</h1>
 
     <div class="form-floating text-start">
-      <input type="text" class="form-control" id="name" placeholder="Name">
+      <input type="text" class="form-control" id="name" placeholder="Name" name="name">
       <label for="name">Name</label>
     </div>
     <div class="form-floating text-start">
-      <input type="email" class="form-control" id="email" placeholder="name@example.com">
+      <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email">
       <label for="email">Email address</label>
     </div>
     <div class="form-floating text-start">
-      <input type="password" class="form-control" id="password" placeholder="Password">
+      <input type="password" class="form-control" id="password" placeholder="Password" name="password">
       <label for="password">Password</label>
     </div>
     <div class="form-floating text-start">
-      <input type="password" class="form-control" id="repeat-password" placeholder="Repeat Password">
+      <input type="password" class="form-control" id="repeat-password" placeholder="Repeat Password" name="confirm-password">
       <label for="repeat-password">Repeat Password</label>
     </div>
 
