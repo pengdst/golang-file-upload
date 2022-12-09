@@ -19,15 +19,29 @@ func main() {
 		log.Fatal(errConf)
 	}
 
+	db, errDb := config.NewDatabase(env)
+	if errDb != nil {
+		log.Fatal(errDb)
+	}
+
 	router := gin.Default()
 
+	userRepo := repository.NewUserRepository(db)
+
 	fileService := service.NewFilesService(env)
+	authService := service.NewAuthService(userRepo)
+
 	filesController := controller.NewFilesController(fileService)
+	authController := controller.NewAuthController(authService)
 
 	router.StaticFS("public", http.Dir("public"))
 
 	api := router.Group("api")
 	api.POST("file", filesController.Upload)
+
+	auth := api.Group("auth")
+	auth.POST("login", authController.Login)
+	auth.POST("register", authController.Register)
 
 	rootDir, errDir := os.Getwd()
 	if errDir != nil {
