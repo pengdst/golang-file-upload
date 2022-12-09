@@ -6,6 +6,7 @@ import (
 	"github.com/pengdst/golang-file-upload/config"
 	"github.com/pengdst/golang-file-upload/controller"
 	webController "github.com/pengdst/golang-file-upload/controller/web"
+	"github.com/pengdst/golang-file-upload/exception"
 	"github.com/pengdst/golang-file-upload/repository"
 	"github.com/pengdst/golang-file-upload/service"
 	log "github.com/sirupsen/logrus"
@@ -39,6 +40,8 @@ func main() {
 	router.StaticFS("public", http.Dir("public"))
 
 	api := router.Group("api")
+	api.Use(gin.CustomRecovery(exception.ErrorHandler))
+
 	api.POST("file", filesController.Upload)
 
 	auth := api.Group("auth")
