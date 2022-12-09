@@ -5,6 +5,8 @@ import (
 	"github.com/kataras/blocks"
 	"github.com/pengdst/golang-file-upload/config"
 	"github.com/pengdst/golang-file-upload/controller"
+	webController "github.com/pengdst/golang-file-upload/controller/web"
+	"github.com/pengdst/golang-file-upload/repository"
 	"github.com/pengdst/golang-file-upload/service"
 	log "github.com/sirupsen/logrus"
 	"html/template"
@@ -62,46 +64,16 @@ func main() {
 			},
 		)
 
-	router.GET("/", func(context *gin.Context) {
-		data := map[string]interface{}{
-			"Peoples": []map[string]string{
-				{
-					"Name":      "One Piece",
-					"Position":  "Troublemaker",
-					"Office":    "New World",
-					"Age":       "33",
-					"StartDate": "2008-11-28",
-					"Salary":    "162,700",
-				},
-			},
-		}
-		err := views.ExecuteTemplate(context.Writer, "index", "admin", data)
-		if err != nil {
-			panic(err)
-		}
-	})
+	homeController := webController.NewHomeController(views, userRepo)
+	webAuthController := webController.NewAuthController(views, userRepo)
 
-	router.GET("/login", func(context *gin.Context) {
-		data := map[string]interface{}{
-			"Title":    "Login",
-			"ImageUrl": "http://www.w3.org/2000/svg",
-		}
-		err := views.ExecuteTemplate(context.Writer, "auth/login", "guest", data)
-		if err != nil {
-			panic(err)
-		}
-	})
+	router.GET("/", homeController.Index)
 
-	router.GET("/register", func(context *gin.Context) {
-		data := map[string]interface{}{
-			"Title":    "Login",
-			"ImageUrl": "http://www.w3.org/2000/svg",
-		}
-		err := views.ExecuteTemplate(context.Writer, "auth/register", "guest", data)
-		if err != nil {
-			panic(err)
-		}
-	})
+	router.GET("/login", webAuthController.Login)
+	router.GET("/register", webAuthController.Register)
+
+	router.POST("/register", webAuthController.RegisterProcess)
+	router.POST("/login", webAuthController.LoginProcess)
 
 	err := router.Run()
 	if err != nil {
