@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pengdst/golang-file-upload/exception"
 	"github.com/pengdst/golang-file-upload/model"
 	"github.com/pengdst/golang-file-upload/model/entity"
 	"github.com/pengdst/golang-file-upload/repository"
@@ -20,8 +21,7 @@ type AuthServiceImpl struct {
 func (a *AuthServiceImpl) Login(ctx *gin.Context, payload model.LoginPayload) *model.User {
 	user, err := a.UserRepository.Verify(ctx, payload.Email, payload.Password)
 	if err != nil {
-		//TODO unauthorized error
-		panic(err)
+		panic(exception.NewUnauthorizedError("wrong email or password"))
 		return nil
 	}
 
@@ -46,9 +46,7 @@ func (a *AuthServiceImpl) Register(ctx *gin.Context, payload model.RegisterPaylo
 		Password: hashPassword,
 	})
 	if err != nil {
-		//TODO unauthorized error
-		panic(err)
-		return
+		panic(exception.NewUnauthorizedError("user already exists"))
 	}
 }
 
