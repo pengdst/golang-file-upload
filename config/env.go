@@ -7,11 +7,12 @@ import (
 
 type EnvConf struct {
 	BaseUrl    string `env:"BASE_URL"`
-	DbHost     string `env:"DB_HOST"`
-	DbUser     string `env:"DB_USER"`
-	DbPassword string `env:"DB_PASSWORD"`
-	DbName     string `env:"DB_NAME"`
-	DbPort     string `env:"DB_PORT"`
+	DbHost     string `env:"DB_HOST,notEmpty"`
+	DbUser     string `env:"DB_USER,notEmpty"`
+	DbPassword string `env:"DB_PASSWORD,notEmpty"`
+	DbName     string `env:"DB_NAME,notEmpty"`
+	DbPort     string `env:"DB_PORT,notEmpty"`
+	JwtSecret  string `env:"JWT_SECRET,notEmpty"`
 }
 
 func LoadEnv() (*EnvConf, error) {
