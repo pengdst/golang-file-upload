@@ -1,0 +1,18 @@
+---
+base: &base
+  dialect: postgres
+  database: {{envOr "DB_NAME" "golang-file-upload_development"}}
+  user: {{envOr "DB_USER" "postgres"}}
+  password: {{envOr "DB_PASSWORD" "postgres"}}
+  host: {{envOr "DB_HOST" "127.0.0.1"}}
+
+development:
+  <<: *base
+  pool: 5
+
+test:
+  <<: *base
+  database: {{envOr "TEST_DB_NAME" "golang-file-upload_test"}}
+
+production:
+  url: {{envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/golang-file-upload_production?sslmode=disable"}}
