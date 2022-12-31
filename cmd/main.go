@@ -32,7 +32,7 @@ func main() {
 	userRepo := repository.NewUserRepository(db)
 
 	fileService := service.NewFilesService(env)
-	authService := service.NewAuthService(userRepo)
+	authService := service.NewAuthService(env, userRepo)
 
 	filesController := controller.NewFilesController(fileService)
 	authController := controller.NewAuthController(authService)
