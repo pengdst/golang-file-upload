@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"github.com/pengdst/golang-file-upload/model/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -12,7 +11,6 @@ func NewDatabase(conf *EnvConf) (*gorm.DB, error) {
 		conf.DbHost, conf.DbUser, conf.DbPassword, conf.DbName, conf.DbPort)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db.AutoMigrate(&entity.User{})
 
 	return db, err
 }
