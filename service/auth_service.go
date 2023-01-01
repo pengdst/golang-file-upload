@@ -8,6 +8,8 @@ import (
 	"github.com/pengdst/golang-file-upload/model/entity"
 	"github.com/pengdst/golang-file-upload/repository"
 	"github.com/pengdst/golang-file-upload/utils"
+	"math/rand"
+	"strconv"
 )
 
 type AuthService interface {
@@ -50,9 +52,10 @@ func (a *AuthServiceImpl) Register(ctx *gin.Context, payload model.RegisterPaylo
 	}
 
 	_, err = a.UserRepository.Create(ctx, entity.User{
-		Name:     payload.Name,
-		Email:    payload.Email,
-		Password: hashPassword,
+		Name:      payload.Name,
+		Email:     payload.Email,
+		TokenHash: strconv.FormatUint(rand.Uint64(), 19),
+		Password:  hashPassword,
 	})
 	if err != nil {
 		panic(exception.NewUnauthorizedError("user already exists"))
