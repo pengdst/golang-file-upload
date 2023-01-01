@@ -1,10 +1,8 @@
 package claims
 
-import "github.com/golang-jwt/jwt"
+type TokenType string
 
-type JwtClaims struct {
-	jwt.StandardClaims
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Role  int    `json:"role"`
-}
+const (
+	AccessToken  TokenType = "access"
+	RefreshToken           = "refresh"
+)
