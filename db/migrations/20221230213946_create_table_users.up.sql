@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users
     id         bigserial primary key,
     name       text,
     email      text,
-    role      text,
+    role       bigint,
     password   text,
     deleted_at timestamp with time zone,
     updated_at timestamp with time zone,
