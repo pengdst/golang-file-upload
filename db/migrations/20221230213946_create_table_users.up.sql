@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users
     name       text,
     email      text,
     role       bigint,
+    token_hash text,
     password   text,
     deleted_at timestamp with time zone,
     updated_at timestamp with time zone,
