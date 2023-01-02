@@ -43,13 +43,9 @@ func (a *AuthServiceImpl) Login(ctx *gin.Context, payload model.LoginPayload) *m
 	}
 
 	accessToken, errr := a.GenerateAccessToken(user)
-	if errr != nil {
-		panic(errr)
-	}
-
 	refreshToken, errr := a.GenerateRefreshToken(user)
 	if errr != nil {
-		panic(errr)
+		panic(exception.NewUnauthorizedError("failed to authenticate user"))
 	}
 
 	return &model.LoginData{
