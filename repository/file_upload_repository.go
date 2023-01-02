@@ -13,6 +13,10 @@ type FileUploadRepositoryImpl struct {
 	DB *gorm.DB
 }
 
+func NewFileUploadRepository(DB *gorm.DB) FileUploadRepository {
+	return &FileUploadRepositoryImpl{DB: DB}
+}
+
 func (f *FileUploadRepositoryImpl) Save(upload entity.FileUpload) entity.FileUpload {
 	f.DB.Create(&upload)
 
