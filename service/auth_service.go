@@ -3,6 +3,7 @@ package service
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -13,6 +14,7 @@ import (
 	"github.com/pengdst/golang-file-upload/model/entity"
 	"github.com/pengdst/golang-file-upload/repository"
 	"github.com/pengdst/golang-file-upload/utils"
+	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"strconv"
 	"time"
@@ -21,6 +23,10 @@ import (
 type AuthService interface {
 	Login(ctx *gin.Context, payload model.LoginPayload) *model.LoginData
 	Register(ctx *gin.Context, payload model.RegisterPayload)
+	RefreshToken(ctx *gin.Context) string
+	ValidateRefreshToken(tokenString string) (*claims.RefreshTokenClaims, error)
+	ValidateAccessToken(tokenString string) (*claims.AccessTokenClaims, error)
+	GenerateCustomKey(id uint, tokenHash string) (string, error)
 }
 
 type AuthServiceImpl struct {
@@ -61,6 +67,16 @@ func (a *AuthServiceImpl) Login(ctx *gin.Context, payload model.LoginPayload) *m
 			RefreshToken: refreshToken,
 		},
 	}
+}
+
+func (a *AuthServiceImpl) RefreshToken(ctx *gin.Context) string {
+	user := ctx.Request.Context().Value(model.User{}).(entity.User)
+	accessToken, errr := a.GenerateAccessToken(&user)
+	if errr != nil {
+		panic(exception.NewUnauthorizedError("failed to authenticate user"))
+	}
+
+	return accessToken
 }
 
 func (a *AuthServiceImpl) Register(ctx *gin.Context, payload model.RegisterPayload) {
@@ -111,6 +127,55 @@ func (a *AuthServiceImpl) GenerateRefreshToken(user *entity.User) (string, error
 			},
 		},
 	).SignedString([]byte(a.Env.JwtSecret))
+}
+
+func (a *AuthServiceImpl) ValidateRefreshToken(tokenString string) (*claims.RefreshTokenClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &claims.RefreshTokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			log.Error("Unexpected signing method in auth token")
+			return nil, errors.New("unexpected signing method in auth token")
+		}
+
+		return []byte(a.Env.JwtSecret), nil
+	})
+
+	if err != nil {
+		log.Error("unable to parse claims", "error", err)
+		return nil, err
+	}
+
+	tokenClaims, ok := token.Claims.(*claims.RefreshTokenClaims)
+	if !ok || !token.Valid || tokenClaims.TokenType != claims.RefreshToken {
+		log.Error("could not extract claims from token")
+		return nil, errors.New("invalid token: authentication failed")
+	}
+
+	return tokenClaims, nil
+}
+
+func (a *AuthServiceImpl) ValidateAccessToken(tokenString string) (*claims.AccessTokenClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &claims.AccessTokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			log.Error("Unexpected signing method in auth token")
+			return nil, errors.New("unexpected signing method in auth token")
+		}
+
+		return []byte(a.Env.JwtSecret), nil
+	})
+
+	if err != nil {
+		log.Error("unable to parse claims:", err)
+		return nil, err
+	}
+
+	tokenClaims, ok := token.Claims.(*claims.AccessTokenClaims)
+	if !ok || !token.Valid || tokenClaims.TokenType != claims.AccessToken {
+		log.Error("could not extract claims from token")
+		return nil, errors.New("invalid token: authentication failed")
+	}
+
+	return tokenClaims, nil
 }
 
 func (a *AuthServiceImpl) GenerateCustomKey(id uint, tokenHash string) (string, error) {
