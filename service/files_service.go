@@ -23,9 +23,10 @@ type FilesServiceImpl struct {
 	fileUploadRepo repository.FileUploadRepository
 }
 
-func NewFilesService(env *config.EnvConf) FilesService {
+func NewFilesService(env *config.EnvConf, fileUploadRepo repository.FileUploadRepository) FilesService {
 	return &FilesServiceImpl{
-		env: env,
+		env:            env,
+		fileUploadRepo: fileUploadRepo,
 	}
 }
 
