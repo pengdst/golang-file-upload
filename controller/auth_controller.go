@@ -10,6 +10,7 @@ import (
 type AuthController interface {
 	Login(ctx *gin.Context)
 	Register(ctx *gin.Context)
+	RefreshToken(ctx *gin.Context)
 	Logout(ctx *gin.Context)
 }
 
@@ -25,6 +26,14 @@ func (a *AuthControllerImpl) Login(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Message: "success logged in",
 		Data:    a.AuthService.Login(ctx, payload),
+	})
+}
+
+func (a *AuthControllerImpl) RefreshToken(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, model.WebResponse{
+		Code:    http.StatusOK,
+		Message: "success refresh access token",
+		Data:    a.AuthService.RefreshToken(ctx),
 	})
 }
 

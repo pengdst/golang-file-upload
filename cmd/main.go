@@ -47,6 +47,7 @@ func main() {
 	auth := api.Group("auth")
 	auth.POST("login", authController.Login)
 	auth.POST("register", authController.Register)
+	auth.POST("refresh-token", apiMiddleware.ValidateRefreshToken, authController.RefreshToken)
 
 	rootDir, errDir := os.Getwd()
 	if errDir != nil {
