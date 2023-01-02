@@ -13,7 +13,7 @@ import (
 )
 
 type AuthService interface {
-	Login(ctx *gin.Context, payload model.LoginPayload) *model.User
+	Login(ctx *gin.Context, payload model.LoginPayload) *model.LoginData
 	Register(ctx *gin.Context, payload model.RegisterPayload)
 }
 
@@ -29,7 +29,7 @@ func NewAuthService(env *config.EnvConf, userRepository repository.UserRepositor
 	}
 }
 
-func (a *AuthServiceImpl) Login(ctx *gin.Context, payload model.LoginPayload) *model.User {
+func (a *AuthServiceImpl) Login(ctx *gin.Context, payload model.LoginPayload) *model.LoginData {
 	user, err := a.UserRepository.Verify(ctx, payload.Email, payload.Password)
 	if err != nil {
 		panic(exception.NewUnauthorizedError("wrong email or password"))
