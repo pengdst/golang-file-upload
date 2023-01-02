@@ -12,6 +12,7 @@ type UserRepository interface {
 	Create(ctx context.Context, user entity.User) (*entity.User, error)
 	Verify(ctx context.Context, email string, password string) (*entity.User, error)
 	GetAll(ctx context.Context) []entity.User
+	Get(ctx context.Context, userId int) (*entity.User, error)
 }
 
 type UserRepositoryImpl struct {
@@ -53,4 +54,14 @@ func (u *UserRepositoryImpl) GetAll(ctx context.Context) []entity.User {
 	u.Db.WithContext(ctx).Find(&users)
 
 	return users
+}
+
+func (u *UserRepositoryImpl) Get(ctx context.Context, userId int) (*entity.User, error) {
+	var user entity.User
+	result := u.Db.WithContext(ctx).First(&user, userId)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }
