@@ -7,6 +7,7 @@ import (
 	"github.com/pengdst/golang-file-upload/controller"
 	webController "github.com/pengdst/golang-file-upload/controller/web"
 	"github.com/pengdst/golang-file-upload/exception"
+	"github.com/pengdst/golang-file-upload/middleware"
 	"github.com/pengdst/golang-file-upload/repository"
 	"github.com/pengdst/golang-file-upload/service"
 	log "github.com/sirupsen/logrus"
@@ -30,6 +31,7 @@ func main() {
 	router := gin.Default()
 
 	userRepo := repository.NewUserRepository(db)
+	fileUploadRepo := repository.NewFileUploadRepository(db)
 
 	fileService := service.NewFilesService(env, fileUploadRepo)
 	authService := service.NewAuthService(env, userRepo)
@@ -37,12 +39,13 @@ func main() {
 	filesController := controller.NewFilesController(fileService)
 	authController := controller.NewAuthController(authService)
 
+	apiMiddleware := middleware.NewApiMiddleware(authService, userRepo)
+
 	router.StaticFS("public", http.Dir("public"))
 
-	api := router.Group("api")
-	api.Use(gin.CustomRecovery(exception.ErrorHandler))
+	api := router.Group("api", gin.CustomRecovery(exception.ErrorHandler))
 
-	api.POST("file", filesController.Upload)
+	api.POST("file", apiMiddleware.ValidateAccessToken, filesController.Upload)
 
 	auth := api.Group("auth")
 	auth.POST("login", authController.Login)
