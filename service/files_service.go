@@ -12,6 +12,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type FilesService interface {
@@ -40,7 +41,8 @@ func (f *FilesServiceImpl) Upload(c *gin.Context, file *multipart.FileHeader) mo
 		}
 	}
 
-	filePath := filepath.Join(uploadPath, file.Filename)
+	fileName := fmt.Sprintf("%v_%s", time.Now().Unix(), file.Filename)
+	filePath := filepath.Join(uploadPath, fileName)
 	err = c.SaveUploadedFile(file, filePath)
 	if err != nil {
 		panic(err)
@@ -52,7 +54,7 @@ func (f *FilesServiceImpl) Upload(c *gin.Context, file *multipart.FileHeader) mo
 	}
 
 	fileUpload := f.fileUploadRepo.Save(entity.FileUpload{
-		Name:          file.Filename,
+		Name:          fileName,
 		MimeType:      detectFile.String(),
 		FullPath:      filePath,
 		RootDirectory: uploadPath,
